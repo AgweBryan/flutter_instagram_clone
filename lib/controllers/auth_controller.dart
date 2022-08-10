@@ -1,10 +1,11 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_instagram_clone/responsive/responsive_layout_screen.dart';
 import 'package:flutter_instagram_clone/utils/constants.dart';
 import 'package:flutter_instagram_clone/views/screens/auth/login_screen.dart';
-import 'package:flutter_instagram_clone/views/screens/home_screen.dart';
 import 'package:get/get.dart';
 import 'package:flutter_instagram_clone/models/user.dart' as model;
 
@@ -14,26 +15,32 @@ class AuthController extends GetxController {
   static final AuthController instance = Get.find();
 
   late Rx<User?> _user;
+  final Rx<bool> _isLoading = false.obs;
+
+  final currentUserProfilePhoto = Uint8List(0).obs;
+  final username = ''.obs;
+  final isCached = false.obs;
 
   final Rx<Uint8List> _selectedImage = Rx<Uint8List>((Uint8List(0)));
-
+  bool get isLoading => _isLoading.value;
   Uint8List get selectedImage => _selectedImage.value;
-
   User get user => _user.value!;
 
   @override
-  void onReady() {
+  void onReady() async {
     super.onReady();
     _user = Rx<User?>(firebaseAuth.currentUser);
     _user.bindStream(firebaseAuth.authStateChanges());
     ever(_user, _setInitialScreen);
+    getProfilePhoto();
   }
 
   _setInitialScreen(User? user) {
     if (user == null) {
       Get.offAll(() => const LoginScreen());
     } else {
-      Get.offAll(() => const HomeScreen());
+      Get.offAll(() => ResponsiveLayout());
+      _isLoading.value = false;
     }
   }
 
@@ -49,6 +56,7 @@ class AuthController extends GetxController {
   // register the user
   void registerUser(
       String username, String email, String password, Uint8List? image) async {
+    _isLoading.value = true;
     try {
       if (username.isNotEmpty &&
           email.isNotEmpty &&
@@ -76,9 +84,11 @@ class AuthController extends GetxController {
             .set(user.toJson());
       } else {
         Get.snackbar('Error Creating Account', 'Please enter all the fields');
+        _isLoading.value = false;
       }
     } catch (e) {
       Get.snackbar('Error', e.toString());
+      _isLoading.value = false;
     }
   }
 
@@ -99,20 +109,42 @@ class AuthController extends GetxController {
   }
 
   void loginUser(String email, String password) async {
+    _isLoading.value = true;
     try {
       if (email.isNotEmpty && password.isNotEmpty) {
         await firebaseAuth.signInWithEmailAndPassword(
             email: email, password: password);
         Get.snackbar('Sign In', 'You have signed in successfully');
       } else {
+        _isLoading.value = false;
         Get.snackbar('Error Logging In', 'Please enter all the fields');
       }
     } catch (e) {
+      _isLoading.value = false;
       Get.snackbar('Error Logging In', e.toString());
     }
   }
 
   signOut() async {
     await firebaseAuth.signOut();
+  }
+
+  getProfilePhoto() async {
+    final userDoc =
+        await firestore.collection('users').doc(authController.user.uid).get();
+
+    username.value = model.User.fromSnap(userDoc).name;
+
+    final fileInfo = await defaultCacheManager
+        .getFileFromCache(model.User.fromSnap(userDoc).profilePhoto);
+    if (fileInfo == null) {
+      await defaultCacheManager
+          .downloadFile(model.User.fromSnap(userDoc).profilePhoto);
+      currentUserProfilePhoto.value =
+          await File(model.User.fromSnap(userDoc).profilePhoto).readAsBytes();
+    } else {
+      isCached.value = true;
+      currentUserProfilePhoto.value = await fileInfo.file.readAsBytes();
+    }
   }
 }

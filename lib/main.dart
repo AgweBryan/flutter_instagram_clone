@@ -3,10 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_instagram_clone/controllers/auth_controller.dart';
-import 'package:flutter_instagram_clone/responsive/mobile_screen_layout.dart';
-import 'package:flutter_instagram_clone/responsive/responsive_layout_screen.dart';
-import 'package:flutter_instagram_clone/responsive/web_screen_layout.dart';
 import 'package:flutter_instagram_clone/utils/colors.dart';
+import 'package:flutter_instagram_clone/views/screens/auth/login_screen.dart';
 import 'package:get/get.dart';
 
 void main() async {
@@ -44,10 +42,7 @@ class MyApp extends StatelessWidget {
       transitionDuration: const Duration(
         milliseconds: 1000,
       ),
-      home: const ResponsiveLayout(
-        mobileScreenLayout: MobileScreenLayout(),
-        webScreenLayout: WebScreenLayout(),
-      ),
+      home: const LoginScreen(),
     );
   }
 }
