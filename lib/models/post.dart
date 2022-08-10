@@ -11,6 +11,7 @@ class Post {
   String caption;
   String postUrl;
   String profilePhoto;
+  String datePublished;
 
   Post({
     required this.caption,
@@ -18,6 +19,7 @@ class Post {
     required this.id,
     required this.shareCount,
     required this.likes,
+    required this.datePublished,
     required this.reports,
     required this.profilePhoto,
     required this.uid,
@@ -36,6 +38,7 @@ class Post {
         'shareCount': shareCount,
         'caption': caption,
         'postUrl': postUrl,
+        'datePublished': datePublished,
       };
 
   static Post fromSnap(DocumentSnapshot snap) {
@@ -52,6 +55,7 @@ class Post {
       uid: snapshot['uid'],
       username: snapshot['username'],
       postUrl: snapshot['postUrl'],
+      datePublished: snapshot['datePublished'],
     );
   }
 }

@@ -1,19 +1,19 @@
+import 'package:flutter_instagram_clone/models/post.dart';
 import 'package:flutter_instagram_clone/utils/constants.dart';
 import 'package:get/get.dart';
-import 'package:flutter_instagram_clone/models/user.dart' as model;
 
 class PostsController extends GetxController {
-  final Rx<List<model.User>> _users = Rx<List<model.User>>([]);
+  final Rx<List<Post>> _posts = Rx<List<Post>>([]);
 
-  List<model.User> get users => _users.value;
+  List<Post> get posts => _posts.value;
 
   @override
   void onInit() {
     super.onInit();
-    _users.bindStream(firestore.collection('users').snapshots().map((query) {
-      List<model.User> result = [];
+    _posts.bindStream(firestore.collection('posts').snapshots().map((query) {
+      List<Post> result = [];
       for (final element in query.docs) {
-        result.add(model.User.fromSnap(element));
+        result.add(Post.fromSnap(element));
       }
       return result;
     }));

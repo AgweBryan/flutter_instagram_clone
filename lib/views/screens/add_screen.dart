@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -32,6 +31,14 @@ class AddScreen extends StatelessWidget {
             body: SingleChildScrollView(
               child: Column(
                 children: [
+                  _addPostController.isLoading
+                      ? const LinearProgressIndicator(
+                          backgroundColor: purpleColor,
+                        )
+                      : const SizedBox(),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -101,7 +108,7 @@ class AddScreen extends StatelessWidget {
             if (_captionController.text != '') {
               _addPostController.uploadPost(
                 caption: _captionController.text,
-                postUrl: _addPostController.imagePost,
+                imagePost: _addPostController.imagePost,
                 username: authController.username.value,
                 profilePhoto: authController.currentUserProfilePhoto.value,
               );
