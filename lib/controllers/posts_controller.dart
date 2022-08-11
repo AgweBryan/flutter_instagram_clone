@@ -10,6 +10,8 @@ class PostsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
+    // Get data from firestore
     _posts.bindStream(firestore.collection('posts').snapshots().map((query) {
       List<Post> result = [];
       for (final element in query.docs) {
