@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_clone/models/post.dart';
 import 'package:flutter_instagram_clone/utils/colors.dart';
+import 'package:flutter_instagram_clone/views/screens/comment_screen.dart';
+import 'package:get/get.dart';
 
 class PostCard extends StatelessWidget {
   final Post post;
@@ -92,9 +94,12 @@ class PostCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(
                 horizontal: 16,
               ),
-              child: CachedNetworkImage(
-                imageUrl: post.postUrl,
-                fit: BoxFit.cover,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: CachedNetworkImage(
+                  imageUrl: post.postUrl,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
@@ -108,7 +113,9 @@ class PostCard extends StatelessWidget {
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.to(() => CommentScreen(id: post.id));
+                },
                 icon: const Icon(Icons.comment_outlined),
               ),
               IconButton(
