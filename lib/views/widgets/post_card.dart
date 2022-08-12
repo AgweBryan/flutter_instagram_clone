@@ -126,7 +126,7 @@ class PostCard extends StatelessWidget {
                   icon: const Icon(Icons.comment_outlined),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () => _postsController.shareVideo(post),
                   icon: const Icon(Icons.send),
                 ),
                 const Expanded(child: SizedBox()),
