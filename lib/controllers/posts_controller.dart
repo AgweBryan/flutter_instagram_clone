@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_instagram_clone/models/post.dart';
 import 'package:flutter_instagram_clone/utils/constants.dart';
 import 'package:get/get.dart';
@@ -19,5 +20,20 @@ class PostsController extends GetxController {
       }
       return result;
     }));
+  }
+
+  likePost(String id) async {
+    final doc = await firestore.collection('posts').doc(id).get();
+
+    final uid = authController.user.uid;
+    if ((doc.data() as dynamic)['likes'].contains(uid)) {
+      await firestore.collection('posts').doc(id).update({
+        'likes': FieldValue.arrayRemove([uid])
+      });
+    } else {
+      await firestore.collection('posts').doc(id).update({
+        'likes': FieldValue.arrayUnion([uid])
+      });
+    }
   }
 }
