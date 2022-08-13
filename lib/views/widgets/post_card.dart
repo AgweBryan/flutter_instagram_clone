@@ -5,13 +5,20 @@ import 'package:flutter_instagram_clone/models/post.dart';
 import 'package:flutter_instagram_clone/utils/colors.dart';
 import 'package:flutter_instagram_clone/utils/constants.dart';
 import 'package:flutter_instagram_clone/views/screens/comment_screen.dart';
+import 'package:flutter_instagram_clone/views/widgets/like_animation.dart';
 import 'package:get/get.dart';
 
-class PostCard extends StatelessWidget {
+class PostCard extends StatefulWidget {
   final Post post;
   PostCard({Key? key, required this.post}) : super(key: key);
 
+  @override
+  State<PostCard> createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard> {
   final PostsController _postsController = Get.find();
+  bool isLikeAnimating = false;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +41,7 @@ class PostCard extends StatelessWidget {
                   ClipOval(
                     child: CachedNetworkImage(
                       fit: BoxFit.cover,
-                      imageUrl: post.profilePhoto,
+                      imageUrl: widget.post.profilePhoto,
                       width: 40,
                       height: 40,
                     ),
@@ -49,7 +56,7 @@ class PostCard extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            post.username,
+                            widget.post.username,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -92,41 +99,81 @@ class PostCard extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .35,
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: CachedNetworkImage(
-                    imageUrl: post.postUrl,
-                    fit: BoxFit.cover,
+            GestureDetector(
+              onDoubleTap: () {
+                setState(() {
+                  isLikeAnimating = true;
+                });
+              },
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .35,
+                    width: double.infinity,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: CachedNetworkImage(
+                          imageUrl: widget.post.postUrl,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                  AnimatedOpacity(
+                    duration: const Duration(milliseconds: 200),
+                    opacity: isLikeAnimating ? 1 : 0,
+                    child: LikeAnimation(
+                      onTap: () {
+                        setState(() {
+                          isLikeAnimating = false;
+                          _postsController.likePost(widget.post.id);
+                        });
+                      },
+                      isAnimating: isLikeAnimating,
+                      duration: const Duration(
+                        milliseconds: 400,
+                      ),
+                      child: const Icon(Icons.favorite,
+                          size: 100, color: Colors.red),
+                    ),
+                  ),
+                ],
               ),
             ),
             Row(
               children: [
-                IconButton(
-                  onPressed: () => _postsController.likePost(post.id),
-                  icon: Icon(
-                    Icons.favorite,
-                    color: post.likes.contains(authController.user.uid)
-                        ? Colors.red
-                        : Colors.grey,
+                LikeAnimation(
+                  onTap: () {
+                    print('animating');
+                    _postsController.likePost(widget.post.id);
+                  },
+                  isSmallLike: true,
+                  isAnimating: widget.post.likes.contains(
+                    authController.user.uid,
+                  ),
+                  child: IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.favorite,
+                      color: widget.post.likes.contains(authController.user.uid)
+                          ? Colors.red
+                          : Colors.grey,
+                    ),
                   ),
                 ),
                 IconButton(
                   onPressed: () {
-                    Get.to(() => CommentScreen(id: post.id));
+                    Get.to(() => CommentScreen(id: widget.post.id));
                   },
                   icon: const Icon(Icons.comment_outlined),
                 ),
                 IconButton(
-                  onPressed: () => _postsController.shareVideo(post),
+                  onPressed: () => _postsController.shareVideo(widget.post),
                   icon: const Icon(Icons.send),
                 ),
                 const Expanded(child: SizedBox()),
@@ -150,7 +197,7 @@ class PostCard extends StatelessWidget {
                         .subtitle2!
                         .copyWith(fontWeight: FontWeight.w800),
                     child: Text(
-                      '${post.likes.length.toString()} likes',
+                      '${widget.post.likes.length.toString()} likes',
                       style: Theme.of(context).textTheme.bodyText2,
                     ),
                   ),
@@ -162,13 +209,13 @@ class PostCard extends StatelessWidget {
                     child: RichText(
                       text: TextSpan(children: [
                         TextSpan(
-                          text: post.username,
+                          text: widget.post.username,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         TextSpan(
-                          text: ' ${post.caption}',
+                          text: ' ${widget.post.caption}',
                         ),
                       ]),
                     ),
@@ -178,7 +225,7 @@ class PostCard extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 4),
                       child: Text(
-                        'View all ${post.commentCount} comments',
+                        'View all ${widget.post.commentCount} comments',
                         style: const TextStyle(
                           fontSize: 16,
                           color: secondaryColor,
@@ -189,7 +236,7 @@ class PostCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: Text(
-                      post.datePublished,
+                      widget.post.datePublished,
                       style: const TextStyle(
                         fontSize: 16,
                         color: secondaryColor,
