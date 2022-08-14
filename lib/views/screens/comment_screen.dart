@@ -21,7 +21,10 @@ class _CommentScreenState extends State<CommentScreen> {
   Widget build(BuildContext context) {
     _commentController.updatePostId(widget.id);
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: mobileBackgroundColor,
+        title: const Text('Comments'),
+      ),
       body: SizedBox(
         width: double.infinity,
         height: MediaQuery.of(context).size.height,
@@ -116,40 +119,86 @@ class _CommentScreenState extends State<CommentScreen> {
               ),
             ),
             const Divider(),
+
             ListTile(
-              title: TextFormField(
-                controller: _commentTextController,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                ),
-                decoration: InputDecoration(
-                  hintText: 'Comment',
-                  filled: true,
-                  border: OutlineInputBorder(
-                      borderSide: Divider.createBorderSide(context)),
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: Divider.createBorderSide(context)),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: Divider.createBorderSide(context)),
-                ),
-              ),
-              trailing: TextButton(
-                child: const Text(
-                  'Send',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
+              title: Row(
+                children: [
+                  authController.isCached.value
+                      ? CircleAvatar(
+                          backgroundImage: MemoryImage(
+                              authController.currentUserProfilePhoto.value),
+                        )
+                      : CircleAvatar(
+                          backgroundImage: MemoryImage(
+                            authController.currentUserProfilePhoto.value,
+                          ),
+                        ),
+                  const SizedBox(
+                    width: 10,
                   ),
-                ),
-                onPressed: () {
-                  _commentController.postComment(_commentTextController.text);
-                  setState(() {
-                    _commentTextController.text = '';
-                  });
-                },
+                  Expanded(
+                    child: TextField(
+                      controller: _commentTextController,
+                      decoration: const InputDecoration(
+                        hintText: 'Comment...',
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _commentController
+                          .postComment(_commentTextController.text);
+                      setState(() {
+                        _commentTextController.text = '';
+                      });
+                    },
+                    child: const Text(
+                      'Post',
+                      style: TextStyle(
+                        color: purpleColor,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
+
+            // ListTile(
+            //   title: TextFormField(
+            //     controller: _commentTextController,
+            //     style: const TextStyle(
+            //       fontSize: 16,
+            //       color: Colors.white,
+            //     ),
+            //     decoration: InputDecoration(
+            //       hintText: 'Comment',
+            //       filled: true,
+            //       border: OutlineInputBorder(
+            //           borderSide: Divider.createBorderSide(context)),
+            //       enabledBorder: OutlineInputBorder(
+            //           borderSide: Divider.createBorderSide(context)),
+            //       focusedBorder: OutlineInputBorder(
+            //           borderSide: Divider.createBorderSide(context)),
+            //     ),
+            //   ),
+            //   trailing: TextButton(
+            //     child: const Text(
+            //       'Send',
+            //       style: TextStyle(
+            //         color: Colors.white,
+            //         fontSize: 16,
+            //       ),
+            //     ),
+            //     onPressed: () {
+            //       _commentController.postComment(_commentTextController.text);
+            //       setState(() {
+            //         _commentTextController.text = '';
+            //       });
+            //     },
+            //   ),
+            // ),
           ],
         ),
       ),

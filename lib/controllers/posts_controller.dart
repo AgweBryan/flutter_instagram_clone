@@ -38,7 +38,16 @@ class PostsController extends GetxController {
     }
   }
 
-  shareVideo(Post post) async {
+  deletePost(String postId) async {
+    try {
+      await firestore.collection('posts').doc(postId).delete();
+      Get.snackbar('Success', 'Post deleted successfully');
+    } catch (e) {
+      Get.snackbar('Error', 'Could not delete post');
+    }
+  }
+
+  sharePost(Post post) async {
     final doc = await firestore.collection('posts').doc(post.id).get();
 
     final uid = authController.user.uid;

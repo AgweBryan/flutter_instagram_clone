@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
       appBar: _appBar(),
       body: Obx(() => _postsController.posts.isEmpty
           ? const Center(
-              child: Text('No post yer'),
+              child: Text('No post yet'),
             )
           : ListView.builder(
               itemCount: _postsController.posts.length,

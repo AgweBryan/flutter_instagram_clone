@@ -65,37 +65,44 @@ class _PostCardState extends State<PostCard> {
                       ),
                     ),
                   ),
-                  IconButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return Dialog(
-                              child: ListView(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 16,
-                                ),
-                                shrinkWrap: true,
-                                children: ['Delete']
-                                    .map(
-                                      (e) => InkWell(
-                                        onTap: () {},
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 12,
-                                            horizontal: 16,
+                  widget.post.uid != authController.user.uid
+                      ? const SizedBox()
+                      : IconButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Dialog(
+                                  child: ListView(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
+                                    shrinkWrap: true,
+                                    children: ['Delete']
+                                        .map(
+                                          (e) => InkWell(
+                                            onTap: () {
+                                              _postsController
+                                                  .deletePost(widget.post.id);
+                                              Get.back();
+                                            },
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                vertical: 12,
+                                                horizontal: 16,
+                                              ),
+                                              child: Text(e),
+                                            ),
                                           ),
-                                          child: Text(e),
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
+                                        )
+                                        .toList(),
+                                  ),
+                                );
+                              },
                             );
                           },
-                        );
-                      },
-                      icon: const Icon(Icons.more_vert))
+                          icon: const Icon(Icons.more_vert))
                 ],
               ),
             ),
@@ -174,7 +181,7 @@ class _PostCardState extends State<PostCard> {
                   icon: const Icon(Icons.comment_outlined),
                 ),
                 IconButton(
-                  onPressed: () => _postsController.shareVideo(widget.post),
+                  onPressed: () => _postsController.sharePost(widget.post),
                   icon: const Icon(Icons.send),
                 ),
                 const Expanded(child: SizedBox()),
@@ -226,7 +233,9 @@ class _PostCardState extends State<PostCard> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 4),
                       child: Text(
-                        'View all ${widget.post.commentCount} comments',
+                        widget.post.commentCount > 0
+                            ? 'View all ${widget.post.commentCount} comments'
+                            : 'Be the first to comment',
                         style: const TextStyle(
                           fontSize: 16,
                           color: secondaryColor,
