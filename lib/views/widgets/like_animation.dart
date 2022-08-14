@@ -58,9 +58,8 @@ class _LikeAnimationState extends State<LikeAnimation>
         ),
       );
 
-      if (widget.onTap != null) {
-        widget.onTap();
-      }
+      widget.onTap();
+      _animationController.stop();
     }
   }
 

@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 
 class PostCard extends StatefulWidget {
   final Post post;
-  PostCard({Key? key, required this.post}) : super(key: key);
+  const PostCard({Key? key, required this.post}) : super(key: key);
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -148,10 +148,11 @@ class _PostCardState extends State<PostCard> {
             Row(
               children: [
                 LikeAnimation(
-                  onTap: () {
-                    print('animating');
-                    _postsController.likePost(widget.post.id);
-                  },
+                  onTap: isLikeAnimating
+                      ? () {
+                          _postsController.likePost(widget.post.id);
+                        }
+                      : () {},
                   isSmallLike: true,
                   isAnimating: widget.post.likes.contains(
                     authController.user.uid,
