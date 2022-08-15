@@ -43,6 +43,7 @@ dependencies:
   path_provider: null
   share_plus: ^4.0.10+1
   timeago: null
+  flutter_staggered_grid_view:
 
 dev_dependencies:
 
