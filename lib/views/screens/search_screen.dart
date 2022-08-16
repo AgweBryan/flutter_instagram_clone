@@ -78,8 +78,15 @@ class SearchScreen extends StatelessWidget {
         decoration: const InputDecoration(
           labelText: 'Search for a user',
         ),
-        onFieldSubmitted: (_) {
-          searchController.searchUser(_);
+        // onFieldSubmitted: (_) {
+        //   searchController.searchUser(_);
+        // },
+        onChanged: (value) {
+          if (value.isEmpty) {
+            return;
+          } else {
+            searchController.searchUser(value);
+          }
         },
       ),
     );
