@@ -1,8 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_instagram_clone/controllers/posts_controller.dart';
 import 'package:flutter_instagram_clone/controllers/search_controller.dart';
+import 'package:flutter_instagram_clone/models/post.dart';
 import 'package:flutter_instagram_clone/models/user.dart';
 import 'package:flutter_instagram_clone/utils/colors.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 
 class SearchScreen extends StatelessWidget {
@@ -15,15 +18,7 @@ class SearchScreen extends StatelessWidget {
     return Scaffold(
       appBar: _appBar(),
       body: Obx(() => searchController.searchedUsers.isEmpty
-          ? const Center(
-              child: Text(
-                'Search for users',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            )
+          ? _showTiles()
           : ListView.builder(
               padding: const EdgeInsets.symmetric(vertical: 5),
               itemCount: searchController.searchedUsers.length,
@@ -48,6 +43,31 @@ class SearchScreen extends StatelessWidget {
                 );
               },
             )),
+    );
+  }
+
+  _showTiles() {
+    final PostsController _postController = Get.find();
+    List<Post> posts = _postController.posts;
+    return GridView.builder(
+      semanticChildCount: posts.length,
+      gridDelegate: SliverQuiltedGridDelegate(
+        crossAxisCount: 4,
+        mainAxisSpacing: 0,
+        crossAxisSpacing: 0,
+        repeatPattern: QuiltedGridRepeatPattern.inverted,
+        pattern: [
+          const QuiltedGridTile(2, 2),
+          const QuiltedGridTile(1, 1),
+          const QuiltedGridTile(1, 1),
+          const QuiltedGridTile(1, 2),
+        ],
+      ),
+      itemCount: posts.length,
+      itemBuilder: (context, i) => CachedNetworkImage(
+        imageUrl: posts[i].postUrl,
+        fit: BoxFit.cover,
+      ),
     );
   }
 
