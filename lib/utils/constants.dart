@@ -26,7 +26,7 @@ final List<Widget> pages = [
   SearchScreen(),
   AddScreen(),
   FavoritesScreen(),
-  ProfileScreen(),
+  ProfileScreen(uid: authController.user.uid),
 ];
 
 // OTHERS

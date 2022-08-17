@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_clone/controllers/posts_controller.dart';
 import 'package:flutter_instagram_clone/controllers/profile_controller.dart';
@@ -6,74 +5,106 @@ import 'package:flutter_instagram_clone/utils/colors.dart';
 import 'package:flutter_instagram_clone/utils/constants.dart';
 import 'package:get/get.dart';
 
-class ProfileScreen extends StatelessWidget {
-  ProfileScreen({Key? key}) : super(key: key);
+class ProfileScreen extends StatefulWidget {
+  final String uid;
+  const ProfileScreen({Key? key, required this.uid}) : super(key: key);
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   final ProfileController _profileController = Get.put(ProfileController());
   final PostsController _postsController = Get.find();
+
+  @override
+  void initState() {
+    super.initState();
+    _profileController.updateUserId(widget.uid);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: mobileBackgroundColor,
-        title: Text(
-          authController.username.value,
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 40,
-                  backgroundColor: mobileBackgroundColor,
-                  backgroundImage: MemoryImage(
-                    authController.currentUserProfilePhoto.value,
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: Column(
+    return GetBuilder<ProfileController>(
+        init: ProfileController(),
+        builder: (controller) {
+          if (controller.user.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: mobileBackgroundColor,
+              title: Text(controller.user['name']),
+            ),
+            body: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        // mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildlStateColumn(22, 'posts'),
-                          _buildlStateColumn(150, 'followers'),
-                          _buildlStateColumn(10, 'following'),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            child: _followButton(
-                              text: 'Sign Out',
+                      widget.uid == authController.user.uid
+                          ? CircleAvatar(
+                              radius: 40,
                               backgroundColor: mobileBackgroundColor,
-                              textColor: purpleColor,
-                              borderColor: Colors.grey,
-                              onTap: () {},
+                              backgroundImage: MemoryImage(
+                                authController.currentUserProfilePhoto.value,
+                              ),
+                            )
+                          : CircleAvatar(
+                              radius: 40,
+                              backgroundColor: mobileBackgroundColor,
+                              backgroundImage: NetworkImage(
+                                controller.user['profilePhoto '],
+                              ),
                             ),
-                          ),
-                        ],
-                      )
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              // mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _buildlStateColumn(
+                                    controller.user['posts'].length, 'posts'),
+                                _buildlStateColumn(
+                                    controller.user['followers'], 'followers'),
+                                _buildlStateColumn(
+                                    controller.user['following'], 'following'),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Expanded(
+                                  child: _followButton(
+                                    text: widget.uid == authController.user.uid
+                                        ? 'Sign Out'
+                                        : 'Follow User',
+                                    backgroundColor: mobileBackgroundColor,
+                                    textColor: purpleColor,
+                                    borderColor: Colors.grey,
+                                    onTap: () {},
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
                     ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
+        });
   }
 
   _buildlStateColumn(int count, String label) {
