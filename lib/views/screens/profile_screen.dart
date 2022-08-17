@@ -72,7 +72,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 _buildlStateColumn(
-                                    controller.user['posts'].length, 'posts'),
+                                    controller.user['posts'].length.toString(),
+                                    'posts'),
                                 _buildlStateColumn(
                                     controller.user['followers'], 'followers'),
                                 _buildlStateColumn(
@@ -107,12 +108,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
   }
 
-  _buildlStateColumn(int count, String label) {
+  _buildlStateColumn(String count, String label) {
     return Column(
       // mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          count.toString(),
+          count,
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
