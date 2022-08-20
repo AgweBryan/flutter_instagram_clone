@@ -24,10 +24,16 @@ class AddPostController extends GetxController {
   }) async {
     _isLoading.value = true;
     try {
+      DocumentSnapshot userDoc = await firestore
+          .collection('users')
+          .doc(authController.user.uid)
+          .get();
+
       final allDocs = await firestore.collection('posts').get();
 
       int len = allDocs.docs.length;
       final String id = 'Post $len';
+      print(id);
 
       String postUrl = await _uploadPostToStorage(id, imagePost);
 
@@ -39,7 +45,7 @@ class AddPostController extends GetxController {
         datePublished: DateFormat.yMMMd().format(DateTime.now()),
         postUrl: postUrl,
         // profilePhoto: (userDoc.data() as Map<String, dynamic>)['profilePhoto'],
-        profilePhoto: profilePhoto,
+        profilePhoto: (userDoc.data() as Map<String, dynamic>)['profilePhoto'],
         reports: [],
         shareCount: [],
         uid: authController.user.uid,

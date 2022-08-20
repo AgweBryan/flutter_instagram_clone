@@ -8,12 +8,23 @@ import 'package:flutter_instagram_clone/utils/constants.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AddScreen extends StatelessWidget {
-  AddScreen({Key? key}) : super(key: key);
+class AddScreen extends StatefulWidget {
+  const AddScreen({Key? key}) : super(key: key);
 
+  @override
+  State<AddScreen> createState() => _AddScreenState();
+}
+
+class _AddScreenState extends State<AddScreen> {
   final AddPostController _addPostController = Get.put(AddPostController());
 
   final TextEditingController _captionController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _captionController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +121,9 @@ class AddScreen extends StatelessWidget {
                 username: authController.username.value,
                 profilePhoto: authController.currentUserProfilePhoto.value,
               );
+              setState(() {
+                _captionController.text = '';
+              });
             } else {
               Get.snackbar('Required', 'Please enter a caption for this post');
             }

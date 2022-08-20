@@ -116,6 +116,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                   ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    // physics:const NeverScrollableScrollPhysics(),
+                    itemCount: controller.user['posts'].length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 1,
+                      crossAxisSpacing: 5,
+                    ),
+                    itemBuilder: (context, i) {
+                      print(controller.user['posts'].length);
+                      String currentUserPosts =
+                          (controller.user['posts'][i] as dynamic)['postUrl'];
+                      return CachedNetworkImage(
+                        imageUrl: currentUserPosts,
+                        fit: BoxFit.cover,
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
