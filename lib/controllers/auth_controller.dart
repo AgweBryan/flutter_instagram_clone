@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_instagram_clone/responsive/responsive_layout_screen.dart';
 import 'package:flutter_instagram_clone/utils/constants.dart';
 import 'package:flutter_instagram_clone/views/screens/auth/login_screen.dart';
+import 'package:flutter_instagram_clone/views/screens/restart_app_screen.dart';
 import 'package:get/get.dart';
 import 'package:flutter_instagram_clone/models/user.dart' as model;
 
@@ -126,6 +127,7 @@ class AuthController extends GetxController {
 
   signOut() async {
     await firebaseAuth.signOut();
+    Get.offAll(const RestartApp());
   }
 
   getProfilePhoto() async {
@@ -134,6 +136,5 @@ class AuthController extends GetxController {
 
     username.value = model.User.fromSnap(userDoc).name;
     currentUserProfilePhoto.value = model.User.fromSnap(userDoc).profilePhoto;
-    print(currentUserProfilePhoto.value);
   }
 }

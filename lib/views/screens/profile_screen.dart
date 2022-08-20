@@ -53,15 +53,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 90,
                               fit: BoxFit.cover,
                             ))
-                          : Hero(
-                              tag: widget.uid,
-                              child: ClipOval(
-                                child: CachedNetworkImage(
-                                  imageUrl: controller.user['profilePhoto'],
-                                  width: 90,
-                                  height: 90,
-                                  fit: BoxFit.cover,
-                                ),
+                          : ClipOval(
+                              child: CachedNetworkImage(
+                                imageUrl: controller.user['profilePhoto'],
+                                width: 90,
+                                height: 90,
+                                fit: BoxFit.cover,
                               ),
                             ),
                       const SizedBox(

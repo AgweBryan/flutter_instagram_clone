@@ -42,15 +42,12 @@ class _PostCardState extends State<PostCard> {
                   GestureDetector(
                     onTap: () =>
                         Get.to(() => ProfileScreen(uid: widget.post.uid)),
-                    child: Hero(
-                      tag: widget.post.uid,
-                      child: ClipOval(
-                        child: CachedNetworkImage(
-                          fit: BoxFit.cover,
-                          imageUrl: widget.post.profilePhoto,
-                          width: 40,
-                          height: 40,
-                        ),
+                    child: ClipOval(
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl: widget.post.profilePhoto,
+                        width: 40,
+                        height: 40,
                       ),
                     ),
                   ),
