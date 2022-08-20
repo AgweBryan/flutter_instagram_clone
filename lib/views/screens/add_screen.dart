@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_clone/controllers/add_post_controller.dart';
 import 'package:flutter_instagram_clone/utils/colors.dart';
@@ -43,16 +44,13 @@ class AddScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      authController.isCached.value
-                          ? CircleAvatar(
-                              backgroundImage: MemoryImage(
-                                  authController.currentUserProfilePhoto.value),
-                            )
-                          : CircleAvatar(
-                              backgroundImage: MemoryImage(
-                                authController.currentUserProfilePhoto.value,
-                              ),
-                            ),
+                      ClipOval(
+                          child: CachedNetworkImage(
+                              width: 40,
+                              height: 40,
+                              fit: BoxFit.cover,
+                              imageUrl: authController
+                                  .currentUserProfilePhoto.value)),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * .45,
                         child: TextField(

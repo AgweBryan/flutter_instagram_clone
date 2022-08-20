@@ -17,9 +17,8 @@ class AuthController extends GetxController {
   late Rx<User?> _user;
   final Rx<bool> _isLoading = false.obs;
 
-  final currentUserProfilePhoto = Uint8List(0).obs;
+  final currentUserProfilePhoto = ''.obs;
   final username = ''.obs;
-  final isCached = false.obs;
 
   final Rx<Uint8List> _selectedImage = Rx<Uint8List>((Uint8List(0)));
   bool get isLoading => _isLoading.value;
@@ -134,17 +133,7 @@ class AuthController extends GetxController {
         await firestore.collection('users').doc(authController.user.uid).get();
 
     username.value = model.User.fromSnap(userDoc).name;
-
-    final fileInfo = await defaultCacheManager
-        .getFileFromCache(model.User.fromSnap(userDoc).profilePhoto);
-    if (fileInfo == null) {
-      await defaultCacheManager
-          .downloadFile(model.User.fromSnap(userDoc).profilePhoto);
-      currentUserProfilePhoto.value =
-          await File(model.User.fromSnap(userDoc).profilePhoto).readAsBytes();
-    } else {
-      isCached.value = true;
-      currentUserProfilePhoto.value = await fileInfo.file.readAsBytes();
-    }
+    currentUserProfilePhoto.value = model.User.fromSnap(userDoc).profilePhoto;
+    print(currentUserProfilePhoto.value);
   }
 }

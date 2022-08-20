@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_clone/controllers/posts_controller.dart';
 import 'package:flutter_instagram_clone/controllers/profile_controller.dart';
@@ -44,18 +45,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Row(
                     children: [
                       widget.uid == authController.user.uid
-                          ? CircleAvatar(
-                              radius: 40,
-                              backgroundColor: mobileBackgroundColor,
-                              backgroundImage: MemoryImage(
-                                authController.currentUserProfilePhoto.value,
-                              ),
-                            )
+                          ? ClipOval(
+                              child: CachedNetworkImage(
+                              imageUrl:
+                                  authController.currentUserProfilePhoto.value,
+                              width: 90,
+                              height: 90,
+                              fit: BoxFit.cover,
+                            ))
                           : CircleAvatar(
                               radius: 40,
                               backgroundColor: mobileBackgroundColor,
                               backgroundImage: NetworkImage(
-                                controller.user['profilePhoto '],
+                                controller.user['profilePhoto'],
                               ),
                             ),
                       const SizedBox(
@@ -87,11 +89,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   child: _followButton(
                                     text: widget.uid == authController.user.uid
                                         ? 'Sign Out'
-                                        : 'Follow User',
+                                        : controller.user['isFollowing']
+                                            ? 'Unfollow User'
+                                            : 'Follow User',
                                     backgroundColor: mobileBackgroundColor,
                                     textColor: purpleColor,
                                     borderColor: Colors.grey,
-                                    onTap: () {},
+                                    onTap: () {
+                                      if (widget.uid ==
+                                          authController.user.uid) {
+                                        authController.signOut();
+                                      } else {
+                                        controller.followUser();
+                                      }
+                                    },
                                   ),
                                 ),
                               ],

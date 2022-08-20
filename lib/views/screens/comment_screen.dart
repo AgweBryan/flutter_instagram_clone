@@ -123,16 +123,13 @@ class _CommentScreenState extends State<CommentScreen> {
             ListTile(
               title: Row(
                 children: [
-                  authController.isCached.value
-                      ? CircleAvatar(
-                          backgroundImage: MemoryImage(
-                              authController.currentUserProfilePhoto.value),
-                        )
-                      : CircleAvatar(
-                          backgroundImage: MemoryImage(
-                            authController.currentUserProfilePhoto.value,
-                          ),
-                        ),
+                  ClipOval(
+                      child: CachedNetworkImage(
+                          width: 40,
+                          fit: BoxFit.cover,
+                          height: 40,
+                          imageUrl:
+                              authController.currentUserProfilePhoto.value)),
                   const SizedBox(
                     width: 10,
                   ),
