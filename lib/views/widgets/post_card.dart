@@ -5,6 +5,7 @@ import 'package:flutter_instagram_clone/models/post.dart';
 import 'package:flutter_instagram_clone/utils/colors.dart';
 import 'package:flutter_instagram_clone/utils/constants.dart';
 import 'package:flutter_instagram_clone/views/screens/comment_screen.dart';
+import 'package:flutter_instagram_clone/views/screens/profile_screen.dart';
 import 'package:flutter_instagram_clone/views/widgets/like_animation.dart';
 import 'package:get/get.dart';
 
@@ -38,12 +39,19 @@ class _PostCardState extends State<PostCard> {
               ).copyWith(right: 0),
               child: Row(
                 children: [
-                  ClipOval(
-                    child: CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      imageUrl: widget.post.profilePhoto,
-                      width: 40,
-                      height: 40,
+                  GestureDetector(
+                    onTap: () =>
+                        Get.to(() => ProfileScreen(uid: widget.post.uid)),
+                    child: Hero(
+                      tag: widget.post.uid,
+                      child: ClipOval(
+                        child: CachedNetworkImage(
+                          fit: BoxFit.cover,
+                          imageUrl: widget.post.profilePhoto,
+                          width: 40,
+                          height: 40,
+                        ),
+                      ),
                     ),
                   ),
                   Expanded(

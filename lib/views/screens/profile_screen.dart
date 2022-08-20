@@ -53,11 +53,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 90,
                               fit: BoxFit.cover,
                             ))
-                          : CircleAvatar(
-                              radius: 40,
-                              backgroundColor: mobileBackgroundColor,
-                              backgroundImage: NetworkImage(
-                                controller.user['profilePhoto'],
+                          : Hero(
+                              tag: widget.uid,
+                              child: ClipOval(
+                                child: CachedNetworkImage(
+                                  imageUrl: controller.user['profilePhoto'],
+                                  width: 90,
+                                  height: 90,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                       const SizedBox(
