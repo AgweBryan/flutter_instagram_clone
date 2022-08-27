@@ -1,25 +1,26 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_instagram_clone/controllers/favorites_controller.dart';
 import 'package:flutter_instagram_clone/controllers/posts_controller.dart';
 import 'package:flutter_instagram_clone/responsive/mobile_screen_layout.dart';
 import 'package:flutter_instagram_clone/utils/constants.dart';
 import 'package:get/get.dart';
 
 class ResponsiveLayout extends StatelessWidget {
-  ResponsiveLayout({
+  const ResponsiveLayout({
     Key? key,
   }) : super(key: key);
 
-  final PostsController _postsController = Get.put(PostsController());
-
   @override
   Widget build(BuildContext context) {
+    Get.put(PostsController());
+    Get.put(FavoritesController());
     if (kIsWeb) {
       // Web screen
       return webScreenLayout(context);
     } else {
       // Mobile screen
-      return MobileScreenLayout();
+      return const MobileScreenLayout();
     }
   }
 

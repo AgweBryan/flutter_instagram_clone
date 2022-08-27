@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_instagram_clone/controllers/favorites_controller.dart';
 import 'package:flutter_instagram_clone/controllers/posts_controller.dart';
 import 'package:flutter_instagram_clone/models/post.dart';
 import 'package:flutter_instagram_clone/utils/colors.dart';
@@ -11,7 +12,10 @@ import 'package:get/get.dart';
 
 class PostCard extends StatefulWidget {
   final Post post;
-  const PostCard({Key? key, required this.post}) : super(key: key);
+  const PostCard({
+    Key? key,
+    required this.post,
+  }) : super(key: key);
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -19,6 +23,7 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   final PostsController _postsController = Get.find();
+  final FavoritesController _favoritesController = Get.find();
   bool isLikeAnimating = false;
 
   @override
@@ -83,25 +88,22 @@ class _PostCardState extends State<PostCard> {
                                       vertical: 16,
                                     ),
                                     shrinkWrap: true,
-                                    children: ['Delete']
-                                        .map(
-                                          (e) => InkWell(
-                                            onTap: () {
-                                              _postsController
-                                                  .deletePost(widget.post.id);
-                                              Get.back();
-                                            },
-                                            child: Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                vertical: 12,
-                                                horizontal: 16,
-                                              ),
-                                              child: Text(e),
-                                            ),
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          _postsController
+                                              .deletePost(widget.post.id);
+                                          Get.back();
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 12,
+                                            horizontal: 16,
                                           ),
-                                        )
-                                        .toList(),
+                                          child: const Text('Delete'),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 );
                               },
@@ -191,8 +193,23 @@ class _PostCardState extends State<PostCard> {
                 ),
                 const Expanded(child: SizedBox()),
                 IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.bookmark_border),
+                  onPressed: () {
+                    _favoritesController.posts.any((post) {
+                      return post.id == widget.post.id;
+                    })
+                        ? FavoritesController().removeFromFavorites(widget.post)
+                        : FavoritesController().addPostToFavorites(widget.post);
+
+                    Get.back();
+                  },
+                  icon: _favoritesController.posts.any((post) {
+                    return post.id == widget.post.id;
+                  })
+                      ? const Icon(
+                          Icons.bookmark,
+                          color: purpleColor,
+                        )
+                      : const Icon(Icons.bookmark_border),
                 ),
               ],
             ),

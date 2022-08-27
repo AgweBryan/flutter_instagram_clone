@@ -33,7 +33,6 @@ class AddPostController extends GetxController {
 
       int len = allDocs.docs.length;
       final String id = 'Post $len';
-      print(id);
 
       String postUrl = await _uploadPostToStorage(id, imagePost);
 
