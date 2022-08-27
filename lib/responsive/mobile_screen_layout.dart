@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_instagram_clone/controllers/posts_controller.dart';
 import 'package:flutter_instagram_clone/utils/colors.dart';
 import 'package:flutter_instagram_clone/utils/constants.dart';
-import 'package:get/get.dart';
 
 class MobileScreenLayout extends StatefulWidget {
   const MobileScreenLayout({Key? key}) : super(key: key);
@@ -12,8 +10,6 @@ class MobileScreenLayout extends StatefulWidget {
 }
 
 class _MobileScreenLayoutState extends State<MobileScreenLayout> {
-  final PostsController _postsController = Get.find();
-
   int pageIndex = 0;
 
   @override

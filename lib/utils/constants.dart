@@ -23,8 +23,8 @@ final firestore = FirebaseFirestore.instance;
 // PAGES
 final List<Widget> pages = [
   HomeScreen(),
-  SearchScreen(),
-  AddScreen(),
+  const SearchScreen(),
+  const AddScreen(),
   FavoritesScreen(),
   ProfileScreen(uid: authController.user.uid),
 ];

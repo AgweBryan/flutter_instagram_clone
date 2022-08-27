@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_instagram_clone/utils/constants.dart';
 
 class WebsiteScreenLayout extends StatelessWidget {
-  WebsiteScreenLayout({Key? key}) : super(key: key);
+  const WebsiteScreenLayout({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

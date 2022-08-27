@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -39,7 +38,7 @@ class AuthController extends GetxController {
     if (user == null) {
       Get.offAll(() => const LoginScreen());
     } else {
-      Get.offAll(() => ResponsiveLayout());
+      Get.offAll(() => const ResponsiveLayout());
       _isLoading.value = false;
     }
   }

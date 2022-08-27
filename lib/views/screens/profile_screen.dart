@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_instagram_clone/controllers/posts_controller.dart';
 import 'package:flutter_instagram_clone/controllers/profile_controller.dart';
 import 'package:flutter_instagram_clone/utils/colors.dart';
 import 'package:flutter_instagram_clone/utils/constants.dart';
@@ -16,7 +15,6 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final ProfileController _profileController = Get.put(ProfileController());
-  final PostsController _postsController = Get.find();
 
   @override
   void initState() {
@@ -127,7 +125,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       crossAxisSpacing: 5,
                     ),
                     itemBuilder: (context, i) {
-                      print(controller.user['posts'].length);
                       String currentUserPosts =
                           (controller.user['posts'][i] as dynamic)['postUrl'];
                       return CachedNetworkImage(
